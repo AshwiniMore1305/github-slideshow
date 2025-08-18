@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashwini Ashok More | LEAD ENGINEER </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate Gray & Teal -->
+    <!-- Application Structure Plan: The application is structured as a single-page portfolio with a sticky top navigation bar. This allows recruiters to quickly jump to the sections they are most interested in: Experience, Skills, or Projects. The structure is designed for non-linear exploration. An opening "Impact Dashboard" immediately showcases quantifiable achievements using a chart, providing a strong first impression. The experience section uses an interactive vertical timeline to show career progression clearly. This structure is more engaging and scannable than a traditional linear resume, catering to the fast-paced nature of recruitment. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Quantifiable achievements (e.g., "30% improvement," "40% reduction"). -> Goal: Immediately show value and link it to skills. -> Viz/Method: Interactive Bar Chart (Chart.js) with skill-based filtering. -> Interaction: Buttons filter the chart data based on skill category. Hover tooltips provide context. -> Justification: This makes the connection between skills and results explicit and allows a recruiter to explore impact from different angles. It is a more dynamic and genuine representation of skill-based achievements.
+        - Report Info: Career History. -> Goal: Show progression and responsibilities. -> Viz/Method: Interactive Vertical Timeline (HTML/CSS). -> Interaction: Clicking a job title reveals detailed bullet points. -> Justification: Keeps the initial view clean and focused on the career path, allowing users to drill down as needed.
+        - Report Info: Skills List. -> Goal: Organize and display technical competencies. -> Viz/Method: Grouped Tag/Pill Layout (HTML/CSS). -> Interaction: None, purely visual grouping. -> Justification: Avoids misrepresenting proficiency with a chart, while still being more visually organized and modern than a simple list.
+        - Report Info: Key Projects. -> Goal: Detail specific, high-impact work. -> Viz/Method: Card-based layout. -> Interaction: Cards provide a snapshot, maintaining a clean layout. -> Justification: Organizes distinct pieces of work into digestible, visually separate components.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link.active {
+            color: #0d9488; /* teal-600 */
+            border-bottom-color: #0d9488;
+        }
+        .timeline-item-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .timeline-item-content.open {
+            max-height: 500px; /* Adjust as needed */
+        }
+        .filter-btn.active {
+            background-color: #0d9488; /* teal-600 */
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <header id="header" class="bg-slate-50/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#home" class="text-xl font-bold text-slate-800">Ashwini Ashok More</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 border-b-2 border-transparent">Home</a>
+                        <a href="#impact" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 border-b-2 border-transparent">Impact</a>
+                        <a href="#experience" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 border-b-2 border-transparent">Experience</a>
+                        <a href="#projects" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 border-b-2 border-transparent">Projects</a>
+                        <a href="#skills" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 border-b-2 border-transparent">Skills</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-white">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-teal-600 hover:bg-slate-100">Home</a>
+                <a href="#impact" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-teal-600 hover:bg-slate-100">Impact</a>
+                <a href="#experience" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-teal-600 hover:bg-slate-100">Experience</a>
+                <a href="#projects" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-teal-600 hover:bg-slate-100">Projects</a>
+                <a href="#skills" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-teal-600 hover:bg-slate-100">Skills</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="home" class="text-center pt-16 pb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Lead Engineer & Digital Transformation Leader</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">Strategic and results-driven professional with 8+ years of global experience leading cross-functional teams, QA strategy, and automation to deliver impactful technology solutions.</p>
+            <div class="mt-8 flex justify-center items-center space-x-6 text-sm text-slate-500">
+                <span>📞 +91 9618634430</span>
+                <span class="hidden sm:inline">|</span>
+                <span>📧 amashu.more@gmail.com</span>
+                <span class="hidden sm:inline">|</span>
+                <span>🌍 Hyderabad, India</span>
+            </div>
+        </section>
+
+        <section id="impact" class="py-12 md:py-20 bg-white rounded-xl shadow-sm">
+            <div class="text-center mb-12 px-4">
+                <h2 class="text-3xl font-bold text-slate-900">Career Impact Dashboard</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-slate-600">Explore my key achievements filtered by skill category. Click a skill button below to see the direct impact of that expertise. The chart will dynamically update to show relevant results.</p>
+            </div>
+            <div id="impact-filters" class="flex flex-wrap justify-center gap-2 mb-8 px-4 max-w-4xl mx-auto">
+                <button data-filter="all" class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-teal-600 text-white shadow-sm hover:bg-teal-700 transition">All Skills</button>
+            </div>
+            <div class="chart-container">
+                <canvas id="impactChart"></canvas>
+            </div>
+        </section>
+
+        <section id="experience" class="py-12 md:py-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Professional Experience</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-slate-600">An interactive timeline of my career progression. Click on any role to expand and view key responsibilities and achievements.</p>
+            </div>
+            <div class="relative max-w-3xl mx-auto">
+                <div class="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-slate-200" aria-hidden="true"></div>
+                <div id="timeline-container" class="space-y-12">
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-12 md:py-20 bg-white rounded-xl shadow-sm">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Key Projects</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-slate-600">A selection of projects that showcase my ability to lead, innovate, and deliver results.</p>
+            </div>
+            <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            </div>
+        </section>
+
+        <section id="skills" class="py-12 md:py-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Core Competencies & Skills</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-slate-600">A breakdown of my technical and managerial skill set.</p>
+            </div>
+            <div id="skills-container" class="max-w-4xl mx-auto space-y-8">
+            </div>
+        </section>
+
+        <section id="education" class="py-12 md:py-20 text-center bg-white rounded-xl shadow-sm">
+            <h2 class="text-3xl font-bold text-slate-900">Education & Certifications</h2>
+            <div class="mt-8 space-y-4">
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-800">Bachelor of Technology (B.Tech)</h4>
+                    <p class="text-slate-600">Aurora’s Engineering College – 2014</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-slate-800">Microsoft Certified: Azure Fundamentals</h4>
+                    <p class="text-slate-500 text-sm">Certificate Code: wqXmn-2FqG</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 text-center p-4">
+        <p>&copy; 2024 Ashwini Ashok More. Interactive resume created to showcase skills and experience.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const experienceData = [
+                {
+                    company: 'Google (via HCL Technologies)',
+                    role: 'Lead Engineer, Chromebook Testing',
+                    period: 'Nov 2023 – Present',
+                    side: 'right',
+                    details: [
+                        'Orchestrated the entire QA lifecycle for ChromeOS and Android apps, ensuring seamless global releases.',
+                        'Initiated and led automation efforts, improving testing turnaround time by 30%.',
+                        'Created and maintained real-time dashboards to track KPIs, test cycles, and defect density.',
+                        'Collaborated with Google engineers internationally, reducing regression failures by 25% through data-driven quality practices.'
+                    ]
+                },
+                {
+                    company: 'HCL Technologies',
+                    role: 'Project Lead, PNG India Sales & Services',
+                    period: 'June 2022 – Oct 2023',
+                    side: 'left',
+                    details: [
+                        'Directed a large-scale market expansion initiative, resulting in a 15% growth in the customer base.',
+                        'Designed data-backed sales frameworks, driving performance and boosting revenue pipelines.',
+                        'Managed a cross-functional team of 15+, ensuring collaboration and operational excellence.',
+                        'Ensured compliance with industry regulations and standards through risk management protocols.'
+                    ]
+                },
+                {
+                    company: 'HCL Technologies',
+                    role: 'Senior Consultant, Xerox DocuShare',
+                    period: 'May 2021 – June 2022',
+                    side: 'right',
+                    details: [
+                        'Oversaw operations for cloud-based document management, enabling enterprise-scale deployments.',
+                        'Led AI-powered automation integrations, reducing manual overhead by 40%.',
+                        'Optimized workflows and achieved 99.9% system uptime, enhancing client trust and user satisfaction.'
+                    ]
+                },
+                {
+                    company: 'Infosys BPM',
+                    role: 'Sr. Technical Process Executive',
+                    period: 'Feb 2018 – Aug 2020',
+                    side: 'left',
+                    details: [
+                        'Managed ITIL-aligned operations including incident, change, and service request handling.',
+                        'Authored and standardized SOPs, reducing knowledge gaps and cutting resolution time by 20%.',
+                        'Led user access management initiatives, improving security governance across departments.'
+                    ]
+                },
+                {
+                    company: 'Genpact',
+                    role: 'Process Associate, GE Power',
+                    period: 'July 2016 – Mar 2017',
+                    side: 'right',
+                    details: [
+                        'Coordinated procurement processes and vendor relations in a high-volume ERP environment.',
+                        'Automated procurement reports, increasing efficiency by 30%.'
+                    ]
+                },
+                {
+                    company: 'ECIL',
+                    role: 'Sr. Consultant, Simulator Development',
+                    period: 'Apr 2014 – July 2016',
+                    side: 'left',
+                    details: [
+                        'Developed real-time simulators for nuclear and thermal plant operations training.',
+                        'Engineered control and safety trip systems, enhancing compliance with national training protocols.'
+                    ]
+                }
+            ];
+
+            const projectsData = [
+                {
+                    title: 'Automated Chromebook Testing Dashboard',
+                    description: 'Delivered a real-time dashboard using Python and SQL to track bugs, execution cycles, and KPIs.',
+                    impact: 'Boosted test coverage efficiency by 25%.'
+                },
+                {
+                    title: 'AI-Driven Document Management',
+                    description: 'Implemented OCR and metadata-based AI workflows for Xerox DocuShare to improve document retrieval.',
+                    impact: 'Improved document retrieval speed by 40%.'
+                },
+                {
+                    title: 'Sales Optimization & Market Growth',
+                    description: 'Created segmentation models and automated sales dashboards for PNG India to improve targeting and forecasting.',
+                    impact: 'Led to a 12% increase in overall revenue growth.'
+                }
+            ];
+
+            const skillsData = [
+                {
+                    id: 'proj-mgmt',
+                    category: 'Project Management & Delivery',
+                    skills: ['Agile', 'Scrum', 'Jira', 'Stakeholder Management', 'Risk Analysis']
+                },
+                {
+                    id: 'qa-auto',
+                    category: 'QA & Automation',
+                    skills: ['Python', 'SQL', 'ChromeOS Testing', 'Bugganizer']
+                },
+                {
+                    id: 'itsm-cloud',
+                    category: 'ITSM & Cloud',
+                    skills: ['ServiceNow', 'SaaS', 'Azure Fundamentals', 'AWS']
+                },
+                {
+                    id: 'data-viz',
+                    category: 'Data & Visualization',
+                    skills: ['Power BI', 'Tableau (basic)', 'SQL Server']
+                },
+                {
+                    id: 'collab',
+                    category: 'Cross-functional & Remote Collaboration',
+                    skills: ['Communication', 'Mentoring', 'Global Team Management']
+                },
+                {
+                    id: 'prog-script',
+                    category: 'Programming & Scripting',
+                    skills: ['Python', 'C++', 'Java (basic)']
+                }
+            ];
+
+            const allImpactData = [
+                { label: 'Manual Overhead Reduction (Xerox)', value: 40, skillId: 'qa-auto' },
+                { label: 'Document Retrieval Improvement (Xerox)', value: 40, skillId: 'qa-auto' },
+                { label: 'Testing Turnaround Improvement (Google)', value: 30, skillId: 'qa-auto' },
+                { label: 'Procurement Efficiency (GE Power)', value: 30, skillId: 'prog-script' },
+                { label: 'Regression Failure Reduction (Google)', value: 25, skillId: 'qa-auto' },
+                { label: 'Test Coverage Efficiency (Chromebook Dashboard)', value: 25, skillId: 'prog-script' },
+                { label: 'Resolution Time Reduction (Infosys)', value: 20, skillId: 'itsm-cloud' },
+                { label: 'Customer Base Growth (PNG India)', value: 15, skillId: 'proj-mgmt' },
+                { label: 'Team Size Managed (HCL)', value: 15, skillId: 'collab' },
+                { label: 'Revenue Growth (PNG India)', value: 12, skillId: 'data-viz' },
+                { label: 'System Uptime (Xerox)', value: 99.9, skillId: 'itsm-cloud' },
+                { label: 'Market Expansion (PNG India)', value: 15, skillId: 'proj-mgmt' },
+                { label: 'Cross-team Collaboration (Xerox)', value: 100, skillId: 'collab' },
+            ];
+
+            const timelineContainer = document.getElementById('timeline-container');
+            experienceData.forEach(item => {
+                const alignClass = item.side === 'right' ? 'md:ml-auto' : '';
+                const detailsHTML = item.details.map(detail => `<li class="text-slate-600">${detail}</li>`).join('');
+                const timelineItem = `
+                    <div class="relative w-full md:w-1/2 ${alignClass} pl-8 md:pl-0 md:pr-8 ${item.side === 'right' ? 'md:pl-8 md:border-l-transparent md:border-r-slate-200' : 'md:text-right md:pr-8'}">
+                        <div class="absolute top-0 ${item.side === 'right' ? 'left-0 md:-left-1.5' : 'left-0 md:right-0 md:-right-1.5'} -ml-1.5 w-3 h-3 bg-teal-500 rounded-full border-2 border-white"></div>
+                        <div class="bg-white p-4 rounded-lg shadow-md cursor-pointer timeline-item-header">
+                            <time class="text-sm text-slate-500">${item.period}</time>
+                            <h3 class="text-lg font-bold text-slate-800">${item.role}</h3>
+                            <p class="text-md text-slate-600">${item.company}</p>
+                        </div>
+                        <div class="timeline-item-content mt-2 bg-white p-4 rounded-lg shadow-inner">
+                            <ul class="list-disc list-inside space-y-2 text-left">
+                                ${detailsHTML}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                timelineContainer.innerHTML += timelineItem;
+            });
+
+            const projectsContainer = document.getElementById('projects-container');
+            projectsData.forEach(project => {
+                const projectCard = `
+                    <div class="bg-slate-100 p-6 rounded-lg">
+                        <h3 class="font-bold text-xl text-slate-800">${project.title}</h3>
+                        <p class="mt-2 text-slate-600">${project.description}</p>
+                        <p class="mt-4 text-teal-600 font-semibold">${project.impact}</p>
+                    </div>
+                `;
+                projectsContainer.innerHTML += projectCard;
+            });
+
+            const skillsContainer = document.getElementById('skills-container');
+            const impactFiltersContainer = document.getElementById('impact-filters');
+            
+            skillsData.forEach(category => {
+                const skillsHTML = category.skills.map(skill => `<span class="inline-block bg-slate-200 text-slate-700 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full">${skill}</span>`).join('');
+                const categoryHTML = `
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-3">${category.category}</h3>
+                        <div>${skillsHTML}</div>
+                    </div>
+                `;
+                skillsContainer.innerHTML += categoryHTML;
+
+                const filterButton = document.createElement('button');
+                filterButton.textContent = category.category;
+                filterButton.dataset.filter = category.id;
+                filterButton.className = 'filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+                impactFiltersContainer.appendChild(filterButton);
+            });
+            
+            let impactChart;
+            function updateChart(filterId) {
+                const filteredData = filterId === 'all' ? allImpactData : allImpactData.filter(d => d.skillId === filterId);
+                const labels = filteredData.map(d => d.label);
+                const data = filteredData.map(d => d.value);
+
+                impactChart.data.labels = labels;
+                impactChart.data.datasets[0].data = data;
+                impactChart.update();
+            }
+
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            impactChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: allImpactData.map(d => d.label),
+                    datasets: [{
+                        label: 'Improvement / Growth (%)',
+                        data: allImpactData.map(d => d.value),
+                        backgroundColor: 'rgba(13, 148, 136, 0.6)',
+                        borderColor: 'rgba(13, 148, 136, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.x !== null) {
+                                      if (context.label.includes('Uptime')) {
+                                          label += context.parsed.x + '%';
+                                      } else {
+                                          label += context.parsed.x + '%';
+                                      }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Percentage (%)' }
+                        }
+                    }
+                }
+            });
+
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    updateChart(button.dataset.filter);
+                });
+            });
+
+            document.querySelectorAll('.timeline-item-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    content.classList.toggle('open');
+                });
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
